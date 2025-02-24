@@ -313,7 +313,7 @@ public class Piece{
             while(j<this.row){
                 temp = this.matrix[j][i];
                 this.matrix[j][i] = this.matrix[j][mostRight-i];
-                this.matrix[j][mostRight] = temp;
+                this.matrix[j][mostRight-i] = temp;
                 j+=1;
             }
 
@@ -341,6 +341,7 @@ public class Piece{
                 else if(temp == 'E' || temp == 'L' || temp == 'S' || temp == 'Z') System.err.print("\u001B[35m" + temp + "\u001B[0m");
                 else if(temp == 'F' || temp == 'M' || temp == 'T') System.err.print("\u001B[36m" + temp + "\u001B[0m");
                 else if(temp == 'G' || temp == 'N' || temp == 'U') System.err.print("\u001B[35m" + temp + "\u001B[0m");
+                else System.out.print(temp);
 
                 j+=1;
             }
