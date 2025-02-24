@@ -1,12 +1,15 @@
 package Function;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.util.Arrays;
 import java.util.Scanner;
 
 import ADT.*;
 
 public class Solve {
+
+    public static int langkah;
     
     private static Piece[][] getPieces(int n, int m, int p, String s, String path){
         Piece[][] res = new Piece[p][n*m*8];
@@ -63,7 +66,6 @@ public class Solve {
                 while(temp[0] == signature[0]){
 
                     res[p-1][0].matrix[i] = Arrays.copyOf(temp, m);
-                    // System.out.println(Arrays.toString(res[p-1][0].matrix[i]));
 
                     if(readFile.hasNextLine()){
                         temp = readFile.nextLine().toCharArray();
@@ -79,8 +81,6 @@ public class Solve {
             }
 
             res[p-1][0].fillPieceWithMark(i);
-            // System.out.println("--------------");
-            //res[p-1][0].printPiece();
 
             // piece ditaruh di berbagai posisi
 
@@ -90,8 +90,6 @@ public class Solve {
             while(i<n*m*1){
 
                 res[p-1][i] = Piece.copyOf(walkPiece);
-                // System.out.println("--------------");
-                // res[p-1][i].printPiece();
 
                 walkPiece.shiftRight();
                 i+=1;
@@ -274,6 +272,22 @@ public class Solve {
         return hasil;
     }
 
+    private static boolean isProbablySolvable(Piece[][] pieces, int p){
+        // menentukan apakah luas piece-piece-nya sama atau engga dengan wadah
+
+        int i, count;
+
+        count = 0;
+        i = 0;
+        while(i<p){
+            count += pieces[i][0].pieceSpace();
+            i+=1;
+        }
+
+        if(count == pieces[0][0].row * pieces[0][0].col) return true;
+        else return false;
+    }
+
     private static Piece permutation(Piece board, Piece[][] pieces, int pieceIndex){
         
         if(isFull(board)){
@@ -291,11 +305,22 @@ public class Solve {
 
             i = 0;
             while(i<board.row*board.col*8){
+                langkah+=1;
+                if(i>0){
+                    if(i % (board.row * board.col) == 0){
+                        if(Piece.areEqual(pieces[pieceIndex][i], pieces[pieceIndex][0])){
+                            break;
+                        }
+                    }else if(Piece.areEqual(pieces[pieceIndex][i], pieces[pieceIndex][i-1])){
+                        i = ((i / (board.row * board.col)) + 1) * board.row * board.col;
+                        if(i==board.row*board.col*8) break;
+                    }
+                }
+                
                 if(isFit(board, pieces[pieceIndex][i])){
                     tempBoard = placePiece(Piece.copyOf(board), pieces[pieceIndex][i]);
-                    //tempBoard.printPiece();
+                    
                     res = permutation(tempBoard, pieces, pieceIndex-1);
-                    //res.printPiece();
 
                     if(isFull(res)) return res;
                 }
@@ -312,9 +337,29 @@ public class Solve {
         Piece res = new Piece();
         Piece[][] pieces = getPieces(n, m, p, s, path);
 
+        langkah = 0;
+        if(!isProbablySolvable(pieces, p)) return Piece.emptyBoard(n, m);
+
+        langkah+=1;
         res = permutation(Piece.emptyBoard(n, m), pieces, p-1);
 
         return res;
     }
 
+    public static void writeStringToFile(String s, String path){
+
+        try{
+            FileOutputStream output = new FileOutputStream(path);
+
+            output.write(s.getBytes());
+
+            output.close();
+
+            System.out.println();
+            System.out.println("Solusi berhasil tersimpan di " + path);
+        }catch (Exception e){
+            System.out.println();
+            System.out.println("Error: " + e);
+        }
+    }
 }

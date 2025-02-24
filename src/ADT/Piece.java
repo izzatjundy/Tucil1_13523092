@@ -325,6 +325,7 @@ public class Piece{
     public void printPiece(){
 
         int i, j;
+        char temp;
         
         i = 0;
         while(i<this.row){
@@ -332,7 +333,14 @@ public class Piece{
             j = 0;
             while(j<this.col){
 
-                System.err.print(this.matrix[i][j]);
+                temp = this.matrix[i][j];
+                if(temp == 'A' || temp == 'H' || temp == 'O' || temp == 'V') System.err.print("\u001B[31m" + temp + "\u001B[0m");
+                else if(temp == 'B' || temp == 'I' || temp == 'P' || temp == 'W') System.err.print("\u001B[32m" + temp + "\u001B[0m");
+                else if(temp == 'C' || temp == 'J' || temp == 'Q' || temp == 'X') System.err.print("\u001B[33m" + temp + "\u001B[0m");
+                else if(temp == 'D' || temp == 'K' || temp == 'R' || temp == 'Y') System.err.print("\u001B[34m" + temp + "\u001B[0m");
+                else if(temp == 'E' || temp == 'L' || temp == 'S' || temp == 'Z') System.err.print("\u001B[35m" + temp + "\u001B[0m");
+                else if(temp == 'F' || temp == 'M' || temp == 'T') System.err.print("\u001B[36m" + temp + "\u001B[0m");
+                else if(temp == 'G' || temp == 'N' || temp == 'U') System.err.print("\u001B[35m" + temp + "\u001B[0m");
 
                 j+=1;
             }
@@ -355,4 +363,68 @@ public class Piece{
         }
     }
 
+    public static String pieceToString(Piece piece){
+        int i, j;
+        String res;
+
+        res = "";
+        
+        i = 0;
+        while(i<piece.row){
+
+            j = 0;
+            while(j<piece.col){
+
+                res+=piece.matrix[i][j];
+
+                j+=1;
+            }
+
+            res+="\n";
+
+            i+=1;
+        }
+
+        return res;
+    }
+
+    public static boolean areEqual(Piece a, Piece b){
+
+        if(a.row != b.row || a.col != b.col) return false;
+
+        int i, j;
+
+        i = 0;
+        while(i<a.row){
+
+            j = 0;
+            while(j<a.col){
+
+                if(a.matrix[i][j] != b.matrix[i][j]) return false;
+
+                j+=1;
+            }
+
+            i+=1;
+        }
+
+        return true;
+    }
+
+    public int pieceSpace(){
+        int i, j, count;
+
+        count = 0;
+        i = 0;
+        while(i<this.row){
+            j = 0;
+            while(j<this.col){
+                if(this.matrix[i][j] != '.') count += 1;
+                j+=1;
+            }
+            i+=1;
+        }
+
+        return count;
+    }
 }
