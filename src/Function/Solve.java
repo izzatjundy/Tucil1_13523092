@@ -63,7 +63,7 @@ public class Solve {
                 temp = readFile.nextLine().toCharArray();
                 temp = Solve.fillRowWithMark(temp, m);
 
-                while(temp[0] == getSignature(signature)){
+                while(getSignature(temp) == getSignature(signature)){
 
                     res[p-1][0].matrix[i] = Arrays.copyOf(temp, m);
 
